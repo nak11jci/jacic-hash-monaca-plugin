@@ -64,11 +64,9 @@
     <!-- Required Cordova Plugins -->
     <plugin name="cordova-plugin-whitelist" spec="^1.3.4" />
     <plugin name="cordova-plugin-file" spec="^6.0.2" />
+    <plugin name="cordova-plugin-camera" spec="^6.0.0" />
 
-    <!-- JACIC Hash Plugin (Local Path) -->
-    <!--
-    To install locally, use:
-    monaca plugin add ../cordova-plugin-jacic-hash
-    -->
+    <!-- JACIC Hash Plugin -->
+    <plugin name="cordova-plugin-jacic-hash" spec="https://github.com/nak11jci/jacic-hash-monaca-plugin.git#main:MonacaSample/cordova-plugin-jacic-hash" />
 
 </widget>
