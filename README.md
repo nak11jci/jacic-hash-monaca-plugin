@@ -107,30 +107,24 @@ navigator.camera.getPicture(
 );
 ```
 
-## ネイティブライブラリのビルド
+## ネイティブライブラリについて
 
 ### Android
 
-Androidでは2つのビルド方式をサポートしています:
+このプラグインには**事前ビルド済みのネイティブライブラリ**(.so)が含まれています:
 
-#### Android.mk方式（推奨）
+- `src/android/libs/armeabi-v7a/libjacic-hash-lib.so`
+- `src/android/libs/arm64-v8a/libjacic-hash-lib.so`
+- `src/android/libs/x86/libjacic-hash-lib.so`
+- `src/android/libs/x86_64/libjacic-hash-lib.so`
 
-従来のNDKビルド方式。Monacaや古いCordovaバージョンでの互換性が高いです。
+これらのライブラリは**GitHub Actions**で自動的にビルドされており、Monacaクラウドビルドでそのまま使用できます。
 
-- `src/android/jni/Android.mk` - ビルド定義
-- `src/android/jni/Application.mk` - アプリケーション設定
-
-#### CMake方式（代替）
-
-新しいビルドシステムに対応。
-
-- `src/android/jni/CMakeLists.txt` - CMakeビルド定義
-
-プラグインには両方のビルド設定ファイルが含まれており、ビルドシステムに応じて自動的に適切な方法が選択されます。
+**開発者向け**: ネイティブライブラリを再ビルドする必要がある場合は、[BUILD_NDK.md](BUILD_NDK.md)を参照してください。
 
 ### iOS
 
-Xcodeのビルドシステムで自動的にコンパイルされます。
+Xcodeのビルドシステムで自動的にコンパイルされます。事前ビルドは不要です。
 
 ## 依存関係
 

@@ -1,6 +1,10 @@
-# Build artifacts
+# Build artifacts (intermediate files only - keep final .so files)
 src/android/jni/obj/
 src/android/jni/libs/
+
+# Keep prebuilt libraries
+!src/android/libs/
+!src/android/libs/**/*.so
 
 # Node modules
 node_modules/
