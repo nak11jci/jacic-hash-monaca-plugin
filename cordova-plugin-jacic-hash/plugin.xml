@@ -86,23 +86,11 @@
         <source-file src="src/android/jni/JACICHashLib/sha256.c"
                      target-dir="jni/JACICHashLib" />
 
-        <!-- Native build configuration (Android.mk approach for better compatibility) -->
-        <source-file src="src/android/jni/Android.mk"
-                     target-dir="jni" />
-        <source-file src="src/android/jni/Application.mk"
-                     target-dir="jni" />
-
-        <!-- CMakeLists.txt (alternative build system) -->
-        <source-file src="src/android/jni/CMakeLists.txt"
-                     target-dir="jni" />
-
-        <!-- Prebuilt native libraries for Monaca cloud build -->
-        <!-- Uncomment these lines if you have prebuilt .so files:
+        <!-- Prebuilt native libraries (built by GitHub Actions) -->
         <lib-file src="src/android/libs/armeabi-v7a/libjacic-hash-lib.so" arch="armeabi-v7a" />
         <lib-file src="src/android/libs/arm64-v8a/libjacic-hash-lib.so" arch="arm64-v8a" />
         <lib-file src="src/android/libs/x86/libjacic-hash-lib.so" arch="x86" />
         <lib-file src="src/android/libs/x86_64/libjacic-hash-lib.so" arch="x86_64" />
-        -->
     </platform>
 
 </plugin>

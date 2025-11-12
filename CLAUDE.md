@@ -322,50 +322,40 @@ Androidでは3層構造で実装されています:
 3. **C層** (JACICHashLib)
    - 実際のハッシュ計算とJPEG埋め込み処理
 
-### Androidネイティブライブラリのビルド
+### Androidネイティブライブラリ（事前ビルド方式）
 
-ネイティブライブラリ (`libjacic-hash-lib.so`) のビルドには2つの方法を用意しています:
+このプラグインは**事前ビルド済みのネイティブライブラリ**を使用します:
 
-#### 1. Android.mk方式（推奨）
-
-[Android.mk](cordova-plugin-jacic-hash/src/android/jni/Android.mk)と[Application.mk](cordova-plugin-jacic-hash/src/android/jni/Application.mk)を使用した従来のNDKビルド方式。Monacaや古いCordovaバージョンでの互換性が高いです。
-
-**Android.mk の主要部分:**
-```makefile
-LOCAL_MODULE := jacic-hash-lib
-LOCAL_SRC_FILES := \
-    jacic_hash_jni.cpp \
-    JACICHashLib/writeHashLib.c \
-    JACICHashLib/app1.c \
-    JACICHashLib/app5.c \
-    JACICHashLib/common.c \
-    JACICHashLib/exif.c \
-    JACICHashLib/sha256.c
+```
+cordova-plugin-jacic-hash/src/android/libs/
+├── armeabi-v7a/libjacic-hash-lib.so
+├── arm64-v8a/libjacic-hash-lib.so
+├── x86/libjacic-hash-lib.so
+└── x86_64/libjacic-hash-lib.so
 ```
 
-**Application.mk:**
-```makefile
-APP_ABI := armeabi-v7a arm64-v8a x86 x86_64
-APP_PLATFORM := android-21
-APP_STL := c++_shared
-```
+これらのライブラリは**GitHub Actions**で自動的にビルドされます（[.github/workflows/build-ndk.yml](.github/workflows/build-ndk.yml)）。
 
-この設定により、複数のアーキテクチャ用のネイティブライブラリが自動的にビルドされます。
+#### ビルドプロセス
 
-#### 2. CMake方式（代替）
+1. ソースコード変更をGitHubにプッシュ
+2. GitHub Actionsが自動的にNDKビルドを実行
+3. ビルド済み.soファイルをリポジトリにコミット
+4. Monacaクラウドビルドで事前ビルド済みライブラリを使用
 
-[CMakeLists.txt](cordova-plugin-jacic-hash/src/android/jni/CMakeLists.txt)を使用した新しいビルド方式。
+#### 手動でビルドする場合
 
-**主要部分:**
-```cmake
-add_library(jacic-hash-lib SHARED
-    ${JNI_WRAPPER}
-    ${JACIC_SOURCES}
-)
-target_link_libraries(jacic-hash-lib log)
-```
+開発者がネイティブライブラリを再ビルドする必要がある場合は、[BUILD_NDK.md](cordova-plugin-jacic-hash/BUILD_NDK.md)を参照してください。以下の方法でビルド可能です:
 
-[plugin.xml](cordova-plugin-jacic-hash/plugin.xml:89-97)で両方のビルドファイルを含めているため、ビルドシステムに応じて適切な方法が自動選択されます。
+- **GitHub Actions**: 自動ビルド（推奨）
+- **Google Cloud Shell**: 無料クラウド環境
+- **Docker**: ローカルまたはクラウド
+- **WSL2/Linux**: ローカル環境
+
+**ビルドに使用するファイル:**
+- [Android.mk](cordova-plugin-jacic-hash/src/android/jni/Android.mk): NDKビルド定義
+- [Application.mk](cordova-plugin-jacic-hash/src/android/jni/Application.mk): ビルド設定
+- [CMakeLists.txt](cordova-plugin-jacic-hash/src/android/jni/CMakeLists.txt): CMake定義（代替）
 
 ### JACIC Hash Library (C言語)
 
@@ -396,40 +386,21 @@ Xcodeプロジェクトに自動的に追加され、コンパイルされます
 
 ### Android
 
-#### Android.mk方式（推奨）
+Androidでは**事前ビルド済みライブラリ**を使用します。
 
-[Android.mk](cordova-plugin-jacic-hash/src/android/jni/Android.mk)でネイティブライブラリをビルド:
+[plugin.xml](cordova-plugin-jacic-hash/plugin.xml:89-93)で事前ビルド済み.soファイルを指定:
 
-```makefile
-LOCAL_MODULE := jacic-hash-lib
-LOCAL_SRC_FILES := \
-    jacic_hash_jni.cpp \
-    JACICHashLib/writeHashLib.c \
-    JACICHashLib/app1.c \
-    ...
-LOCAL_LDLIBS := -llog
+```xml
+<!-- Prebuilt native libraries (built by GitHub Actions) -->
+<lib-file src="src/android/libs/armeabi-v7a/libjacic-hash-lib.so" arch="armeabi-v7a" />
+<lib-file src="src/android/libs/arm64-v8a/libjacic-hash-lib.so" arch="arm64-v8a" />
+<lib-file src="src/android/libs/x86/libjacic-hash-lib.so" arch="x86" />
+<lib-file src="src/android/libs/x86_64/libjacic-hash-lib.so" arch="x86_64" />
 ```
 
-[Application.mk](cordova-plugin-jacic-hash/src/android/jni/Application.mk)でビルド設定を指定:
+これらのライブラリはMonacaクラウドビルド時にAPKに自動的に含まれます。NDKビルドは不要です。
 
-```makefile
-APP_ABI := armeabi-v7a arm64-v8a x86 x86_64
-APP_PLATFORM := android-21
-APP_STL := c++_shared
-```
-
-#### CMake方式（代替）
-
-[CMakeLists.txt](cordova-plugin-jacic-hash/src/android/jni/CMakeLists.txt)でもビルド可能:
-
-```cmake
-add_library(jacic-hash-lib SHARED
-    ${JNI_WRAPPER}
-    ${JACIC_SOURCES}
-)
-```
-
-[plugin.xml](cordova-plugin-jacic-hash/plugin.xml:89-97)では両方のビルド設定ファイルを含めています。Gradle/NDKビルド経由で自動的にビルドされます。
+**開発者向け**: ネイティブライブラリの再ビルドが必要な場合は、[BUILD_NDK.md](cordova-plugin-jacic-hash/BUILD_NDK.md)および[GITHUB_SETUP.md](GITHUB_SETUP.md)を参照してください。
 
 ## パーミッション
 
