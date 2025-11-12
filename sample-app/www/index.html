@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    <title>JACIC Hash Sample</title>
+    <link rel="stylesheet" href="components/loader.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="components/loader.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>JACIC Hash Sample</h1>
+        <p class="description">JPEG画像のAPP5領域にハッシュ値を埋め込むサンプルアプリケーション</p>
+
+        <!-- File Selection Section -->
+        <div class="section">
+            <h2>1. 画像を選択または撮影</h2>
+            <div class="button-group">
+                <button id="selectFileBtn" class="btn btn-secondary">フォトライブラリから選択</button>
+                <button id="takePictureBtn" class="btn btn-primary">写真を撮影</button>
+            </div>
+            <div id="fileInfo" class="info"></div>
+        </div>
+
+        <!-- Hash Embed Result Section -->
+        <div class="section">
+            <h2>2. ハッシュ埋め込み結果</h2>
+            <div id="writeResult" class="result"></div>
+        </div>
+
+        <!-- Log Section -->
+        <div class="section">
+            <h2>処理ログ</h2>
+            <div id="logArea" class="log-area"></div>
+        </div>
+    </div>
+
+    <script src="cordova.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

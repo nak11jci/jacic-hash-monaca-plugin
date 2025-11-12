@@ -1,0 +1,17 @@
+# Build artifacts
+src/android/jni/obj/
+src/android/jni/libs/
+
+# Node modules
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

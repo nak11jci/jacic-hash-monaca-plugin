@@ -1,0 +1,25 @@
+# Node modules
+node_modules/
+sample-app/node_modules/
+
+# Build artifacts
+cordova-plugin-jacic-hash/src/android/jni/obj/
+cordova-plugin-jacic-hash/src/android/jni/libs/
+
+# Platform builds
+sample-app/platforms/
+sample-app/plugins/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Monaca
+.monaca/

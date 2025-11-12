@@ -1,0 +1,45 @@
+name: Build Android NDK Libraries
+
+on:
+  workflow_dispatch:  # 手動実行を許可
+  push:
+    paths:
+      - 'cordova-plugin-jacic-hash/src/android/jni/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup NDK
+      uses: nttld/setup-ndk@v1
+      with:
+        ndk-version: r25c
+        add-to-path: true
+
+    - name: Build native libraries
+      run: |
+        cd cordova-plugin-jacic-hash/src/android/jni
+        ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=Android.mk
+
+    - name: Create libs directory structure
+      run: |
+        mkdir -p cordova-plugin-jacic-hash/src/android/libs
+        cp -r cordova-plugin-jacic-hash/src/android/obj/local/* cordova-plugin-jacic-hash/src/android/libs/
+
+    - name: Upload built libraries
+      uses: actions/upload-artifact@v3
+      with:
+        name: android-native-libs
+        path: cordova-plugin-jacic-hash/src/android/libs/
+        retention-days: 30
+
+    - name: Commit and push if changed
+      run: |
+        git config --global user.name 'GitHub Actions'
+        git config --global user.email 'actions@github.com'
+        git add cordova-plugin-jacic-hash/src/android/libs/
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Update prebuilt NDK libraries" && git push)
