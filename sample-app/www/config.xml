@@ -67,6 +67,6 @@
     <plugin name="cordova-plugin-camera" spec="^6.0.0" />
 
     <!-- JACIC Hash Plugin -->
-    <plugin name="cordova-plugin-jacic-hash" spec="https://github.com/nak11jci/jacic-hash-monaca-plugin.git#main:cordova-plugin-jacic-hash" />
+    <plugin name="cordova-plugin-jacic-hash" spec="https://github.com/nak11jci/jacic-hash-monaca-plugin.git#plugin-only" />
 
 </widget>
