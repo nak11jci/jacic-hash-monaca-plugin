@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup NDK
       uses: nttld/setup-ndk@v1
@@ -28,10 +28,10 @@ jobs:
     - name: Create libs directory structure
       run: |
         mkdir -p cordova-plugin-jacic-hash/src/android/libs
-        cp -r cordova-plugin-jacic-hash/src/android/obj/local/* cordova-plugin-jacic-hash/src/android/libs/
+        cp -r cordova-plugin-jacic-hash/src/android/jni/obj/local/* cordova-plugin-jacic-hash/src/android/libs/
 
     - name: Upload built libraries
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: android-native-libs
         path: cordova-plugin-jacic-hash/src/android/libs/
