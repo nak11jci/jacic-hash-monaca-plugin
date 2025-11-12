@@ -6,6 +6,10 @@ on:
     paths:
       - 'cordova-plugin-jacic-hash/src/android/jni/**'
 
+# GitHub Actionsに書き込み権限を付与
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
