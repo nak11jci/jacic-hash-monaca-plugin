@@ -2,9 +2,14 @@
 src/android/jni/obj/
 src/android/jni/libs/
 
-# Keep prebuilt libraries
+# Keep prebuilt libraries (.so files only)
 !src/android/libs/
 !src/android/libs/**/*.so
+
+# Exclude intermediate object files
+src/android/libs/**/objs/
+*.o
+*.o.d
 
 # Node modules
 node_modules/
