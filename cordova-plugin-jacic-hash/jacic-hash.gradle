@@ -1,0 +1,103 @@
+// JACIC Hash Plugin - Custom Gradle configuration for prebuilt native libraries
+
+// Define plugin directory - From platforms/android/app, go up to project root then into plugins
+def pluginDir = file('../../../plugins/cordova-plugin-jacic-hash')
+
+// Task to copy .so files from plugin directory to jniLibs
+task copyNativeLibs {
+    description = 'Copy prebuilt .so files from plugin to jniLibs directory'
+
+    // Always run this task (never UP-TO-DATE)
+    outputs.upToDateWhen { false }
+
+    doLast {
+        println "=== Copy Native Libs Task ==="
+        println "Plugin directory: ${pluginDir.absolutePath}"
+        println "Plugin exists: ${pluginDir.exists()}"
+
+        def targetDir = file('src/main/jniLibs')
+        println "Target directory: ${targetDir.absolutePath}"
+
+        if (pluginDir.exists()) {
+            // Copy .so files from plugin to jniLibs
+            copy {
+                from(pluginDir) {
+                    include 'src/android/libs/**/*.so'
+                    eachFile { details ->
+                        // Remove 'src/android/libs/' prefix from path
+                        details.path = details.path.replaceFirst('src/android/libs/', '')
+                    }
+                }
+                into targetDir
+                includeEmptyDirs = false
+            }
+
+            println "Copied .so files:"
+            targetDir.eachFileRecurse { file ->
+                if (file.name.endsWith('.so')) {
+                    println "  - ${file.name} (${file.length()} bytes)"
+                }
+            }
+        } else {
+            println "ERROR: Plugin directory not found!"
+        }
+        println "==============================="
+    }
+}
+
+// Run before preBuild
+afterEvaluate {
+    preBuild.dependsOn copyNativeLibs
+}
+
+android {
+    sourceSets {
+        main {
+            // Point to jniLibs directory where we copy .so files
+            jniLibs.srcDirs = [file('src/main/jniLibs')]
+        }
+    }
+}
+
+// Ensure native libraries are packaged into the APK
+android.defaultConfig {
+    ndk {
+        abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+    }
+}
+
+// Debug: Print all relevant directories and their contents
+gradle.projectsEvaluated {
+    println "=== JACIC Hash Plugin Debug ==="
+    println "Project directory: ${project.projectDir}"
+    println "Plugin directory: ${pluginDir.absolutePath} (exists: ${pluginDir.exists()})"
+
+    if (pluginDir.exists()) {
+        println "Plugin .so files:"
+        pluginDir.eachFileRecurse { file ->
+            if (file.name.endsWith('.so')) {
+                println "  - ${file.absolutePath.substring(pluginDir.absolutePath.length() + 1)} (${file.length()} bytes)"
+            }
+        }
+    }
+
+    println "\njniLibs source directories:"
+    android.sourceSets.main.jniLibs.srcDirs.each { dir ->
+        println "  - ${dir.absolutePath}"
+        if (dir.exists()) {
+            def items = dir.listFiles()
+            println "    EXISTS: ${items?.length ?: 0} items"
+            items?.each { item ->
+                println "      - ${item.name}"
+                if (item.isDirectory()) {
+                    item.listFiles()?.each { soFile ->
+                        println "          - ${soFile.name} (${soFile.length()} bytes)"
+                    }
+                }
+            }
+        } else {
+            println "    NOT FOUND"
+        }
+    }
+    println "==============================="
+}

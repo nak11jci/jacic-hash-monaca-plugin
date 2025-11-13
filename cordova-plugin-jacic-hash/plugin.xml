@@ -56,37 +56,15 @@
         <source-file src="src/android/JACICHashPlugin.java"
                      target-dir="src/jp/ne/datt/plugin" />
 
-        <!-- Native C++ Files -->
-        <source-file src="src/android/jni/jacic_hash_jni.cpp"
-                     target-dir="jni" />
-
-        <!-- JACIC Hash Library Files -->
-        <source-file src="src/android/jni/JACICHashLib/writeHashLib.h"
-                     target-dir="jni/JACICHashLib" />
-        <source-file src="src/android/jni/JACICHashLib/writeHashLib.c"
-                     target-dir="jni/JACICHashLib" />
-        <source-file src="src/android/jni/JACICHashLib/app1.h"
-                     target-dir="jni/JACICHashLib" />
-        <source-file src="src/android/jni/JACICHashLib/app1.c"
-                     target-dir="jni/JACICHashLib" />
-        <source-file src="src/android/jni/JACICHashLib/app5.h"
-                     target-dir="jni/JACICHashLib" />
-        <source-file src="src/android/jni/JACICHashLib/app5.c"
-                     target-dir="jni/JACICHashLib" />
-        <source-file src="src/android/jni/JACICHashLib/common.h"
-                     target-dir="jni/JACICHashLib" />
-        <source-file src="src/android/jni/JACICHashLib/common.c"
-                     target-dir="jni/JACICHashLib" />
-        <source-file src="src/android/jni/JACICHashLib/exif.h"
-                     target-dir="jni/JACICHashLib" />
-        <source-file src="src/android/jni/JACICHashLib/exif.c"
-                     target-dir="jni/JACICHashLib" />
-        <source-file src="src/android/jni/JACICHashLib/sha256.h"
-                     target-dir="jni/JACICHashLib" />
-        <source-file src="src/android/jni/JACICHashLib/sha256.c"
-                     target-dir="jni/JACICHashLib" />
+        <!-- Custom Gradle script to copy .so files -->
+        <framework src="jacic-hash.gradle" custom="true" type="gradleReference" />
 
         <!-- Prebuilt native libraries (built by GitHub Actions) -->
+        <!-- Note: JNI source files are excluded to force use of prebuilt .so files -->
+        <!-- MonacaCloud build does not have NDK, so we must use prebuilt libraries -->
+        <!-- The .so files will be copied by the custom Gradle script above -->
+
+        <!-- Keep lib-file tags as backup/reference for Cordova -->
         <lib-file src="src/android/libs/armeabi-v7a/libjacic-hash-lib.so" arch="armeabi-v7a" />
         <lib-file src="src/android/libs/arm64-v8a/libjacic-hash-lib.so" arch="arm64-v8a" />
         <lib-file src="src/android/libs/x86/libjacic-hash-lib.so" arch="x86" />
